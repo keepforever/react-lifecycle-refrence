@@ -10,6 +10,7 @@ Birth/Mount Lifecycle Phases:
   * only on initial rendering (not on rerender)
   * if you set state above constructor, that state will run first
 
+```sh
 class MyComponent extends React.Component {
   // e.g. set state before constructor
   state = { 
@@ -29,6 +30,7 @@ class MyComponent extends React.Component {
 
   ...
 }
+```
 
 2. componentWillMount(){}
    
@@ -37,10 +39,11 @@ class MyComponent extends React.Component {
 
   * At this point, props and initial state are defined. We can safely query this.props and this.state, knowing with certainty they are the current values. This means we can start performing calculations or processes based on the prop values.
 
+```sh
 componentWillMount() {
-  do stuff with this.state, and this.props.
+  // do stuff with this.state, and this.props.
 }
-
+```
 3. render() {
   * do NOT call setState() in render, infinite loops
   * gets called every time state or props change
@@ -54,6 +57,7 @@ componentWillMount() {
   * we may need to make changes to our current state based on how the Native UI laid out our content. We may need to figure out the current width/height of our children or our own instance. This is especially helpful in the browser where CSS layout drives a lot of our DOM calculations.
   * setting up 3rd party UIs. For example, if we wanted to use a library like C3.js or the Date Range Picker, this is where we would initialize our UI libraries.
 
+```sh
 Chart.js
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -79,6 +83,7 @@ export default class Chart extends React.Component {
     );
   }
 }
+```
 In the above example, we leverage componentDidMount() to generate our chart, bind it to the DOM using refs and then pass in data.
 
 Re-Render Hooks 
