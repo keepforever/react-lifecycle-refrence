@@ -94,13 +94,14 @@ Re-Render Hooks
   * set to depreciate in react 17.0.0, UNSAFE_componentWillRecieveProps alias. 
 
   SHOULD USE NEW LIFECYCLE IN IT'S PLACE: 
-
+```sh
   class Example extends React.Component {
     static getDerivedStateFromProps(props, state) { 
       props means nextProps, state means nextState
       // ...
     }
   }
+```
   The new static getDerivedStateFromProps lifecycle is invoked after a component is instantiated as well as before it is re-rendered. It can return an object to update state, or null to indicate that the new props do not require any state updates.
 
 2. shouldComponentUpdate(nextProps, nextState){}
@@ -112,18 +113,22 @@ Re-Render Hooks
   * getting depreciated in React 17.0.0, UNSAFE_componentWillUpdate alias
   * do NOT run setState(), causes infinte loop 
   * use nextProps/nextState to set variables
-  
+
+```sh
   class Example extends React.Component {
     getSnapshotBeforeUpdate(prevProps, prevState) {
       // ...
     }
   }
+  ```
+
   The new getSnapshotBeforeUpdate lifecycle is called right before mutations are made (e.g. before the DOM is updated). The return value for this lifecycle will be passed as the third parameter to componentDidUpdate. (This lifecycle isn’t often needed, but can be useful in cases like manually preserving scroll position during rerenders.)
 
   Together with componentDidUpdate, this new lifecycle should cover all use cases for the legacy componentWillUpdate.
 
   4. componentDidUpdate(prevProps, prevState, snapshot)
     * The most common uses of componentDidUpdate() is managing 3rd party UI elements and interacting with the Native UI. When using 3rd Party libraries, like our Chart example, we need to update the UI library with new data.
+  ```sh
     componentDidUpdate(prevProps, prevState, snapshot) {
       // only update chart if the data has changed
       if (prevProps.data !== this.props.data) {
@@ -132,14 +137,16 @@ Re-Render Hooks
         });
       }
     }
-
+```
     * Use this as an opportunity to operate on the DOM when the component has been updated. This is also a good place to do network requests as long as you compare the current props to previous props (e.g. a network request may not be necessary if the props have not changed).
+```sh
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userID !== prevProps.userID) {
         this.fetchData(this.props.userID);
       }
     }
+```
     * You may call setState() immediately in componentDidUpdate() but note that it must be wrapped in a condition like in the example above, or you’ll cause an infinite loop
 
 
