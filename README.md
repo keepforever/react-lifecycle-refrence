@@ -1,11 +1,7 @@
 # Create-React-App to Demonstrate Lifecycle Methods
 
+## Birth/Mount Lifecycle Phases:
 
-
-Component Lifecycle Notes
-
-Birth/Mount Lifecycle Phases:
-  
 1. Constructor runs first
   * only on initial rendering (not on rerender)
   * if you set state above constructor, that state will run first
@@ -13,8 +9,8 @@ Birth/Mount Lifecycle Phases:
 ```sh
 class MyComponent extends React.Component {
   // e.g. set state before constructor
-  state = { 
-    error: null, 
+  state = {
+    error: null,
     isLoaded: false,
     items: []
   }
@@ -33,7 +29,7 @@ class MyComponent extends React.Component {
 ```
 
 2. componentWillMount(){}
-   
+
   * getting depreciated and will not work in React 17.0.0
     i. only UNSAFE_componentWillMount will work in 17.0.0
 
@@ -47,11 +43,11 @@ componentWillMount() {
 3. render() {
   * do NOT call setState() in render, infinite loops
   * gets called every time state or props change
-  * All child Components go through their Re-render Lifecycle Methods 
+  * All child Components go through their Re-render Lifecycle Methods
 }
 
 4. componentDidMount() {}
-  * make AJAX calls here. 
+  * make AJAX calls here.
   * if you call setState() it will trigger a re-render.
   * set up subscriptions here. (then unsubscribe when Component is destroyed)
   * we may need to make changes to our current state based on how the Native UI laid out our content. We may need to figure out the current width/height of our children or our own instance. This is especially helpful in the browser where CSS layout drives a lot of our DOM calculations.
@@ -86,17 +82,17 @@ export default class Chart extends React.Component {
 ```
 In the above example, we leverage componentDidMount() to generate our chart, bind it to the DOM using refs and then pass in data.
 
-Re-Render Hooks 
+## Re-Render Hooks
 
 1. componentWillRecieveProps(prevState, prevProps) {}
-  * do NOT change props here; results in infinte loop
-  * you can setState() based on prevSate and prevProps. 
-  * set to depreciate in react 17.0.0, UNSAFE_componentWillRecieveProps alias. 
+  * do NOT change props here; results in infinite loop
+  * you can setState() based on prevSate and prevProps.
+  * set to depreciate in react 17.0.0, UNSAFE_componentWillRecieveProps alias.
 
-  SHOULD USE NEW LIFECYCLE IN IT'S PLACE: 
+  SHOULD USE getDerivedStateFromProps + componentDidUpdate in it's place:
 ```sh
   class Example extends React.Component {
-    static getDerivedStateFromProps(props, state) { 
+    static getDerivedStateFromProps(props, state) {
       props means nextProps, state means nextState
       // ...
     }
@@ -105,13 +101,13 @@ Re-Render Hooks
   The new static getDerivedStateFromProps lifecycle is invoked after a component is instantiated as well as before it is re-rendered. It can return an object to update state, or null to indicate that the new props do not require any state updates.
 
 2. shouldComponentUpdate(nextProps, nextState){}
-  * make a decision about re-rendering based on incoming props and state. 
-  * perform logic on nextProps/nextState to ultimately return true/false. 
-  * if you forceUpdate(), this lifecycle method will NOT run. 
+  * make a decision about re-rendering based on incoming props and state.
+  * perform logic on nextProps/nextState to ultimately return true/false.
+  * if you forceUpdate(), this lifecycle method will NOT run.
 
 3. componentWillUpdate(nextProps, nextState){}
   * getting depreciated in React 17.0.0, UNSAFE_componentWillUpdate alias
-  * do NOT run setState(), causes infinte loop 
+  * do NOT run setState(), causes infinte loop
   * use nextProps/nextState to set variables
 
 ```sh
@@ -128,39 +124,30 @@ Re-Render Hooks
 
   4. componentDidUpdate(prevProps, prevState, snapshot)
     * The most common uses of componentDidUpdate() is managing 3rd party UI elements and interacting with the Native UI. When using 3rd Party libraries, like our Chart example, we need to update the UI library with new data.
-  ```sh
-    componentDidUpdate(prevProps, prevState, snapshot) {
+
+    ```sh
+
+    'componentDidUpdate(prevProps, prevState, snapshot) {
       // only update chart if the data has changed
       if (prevProps.data !== this.props.data) {
         this.chart = c3.load({
           data: this.props.data
         });
       }
-    }
-```
-    * Use this as an opportunity to operate on the DOM when the component has been updated. This is also a good place to do network requests as long as you compare the current props to previous props (e.g. a network request may not be necessary if the props have not changed).
-```sh
+    }'
+      ```
+
+
+      * Use this as an opportunity to operate on the DOM when the component has been updated. This is also a good place to do network requests as long as you compare the current props to previous props (e.g. a network request may not be necessary if the props have not changed).
+    ```
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userID !== prevProps.userID) {
         this.fetchData(this.props.userID);
       }
     }
-```
+    ```
     * You may call setState() immediately in componentDidUpdate() but note that it must be wrapped in a condition like in the example above, or you’ll cause an infinite loop
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -468,7 +455,7 @@ In the WebStorm menu `Run` select `Edit Configurations...`. Then click `+` and s
 
 Start your app by running `npm start`, then press `^D` on macOS or `F9` on Windows and Linux or click the green debug icon to start debugging in WebStorm.
 
-The same way you can debug your application in IntelliJ IDEA Ultimate, PhpStorm, PyCharm Pro, and RubyMine. 
+The same way you can debug your application in IntelliJ IDEA Ultimate, PhpStorm, PyCharm Pro, and RubyMine.
 
 ## Formatting Code Automatically
 
@@ -2157,7 +2144,7 @@ If you’re using [Apache HTTP Server](https://httpd.apache.org/), you need to c
     RewriteRule ^ index.html [QSA,L]
 ```
 
-It will get copied to the `build` folder when you run `npm run build`. 
+It will get copied to the `build` folder when you run `npm run build`.
 
 If you’re using [Apache Tomcat](http://tomcat.apache.org/), you need to follow [this Stack Overflow answer](https://stackoverflow.com/a/41249464/4878474).
 
@@ -2597,7 +2584,7 @@ To resolve this:
 1. Open an issue on the dependency's issue tracker and ask that the package be published pre-compiled.
   * Note: Create React App can consume both CommonJS and ES modules. For Node.js compatibility, it is recommended that the main entry point is CommonJS. However, they can optionally provide an ES module entry point with the `module` field in `package.json`. Note that **even if a library provides an ES Modules version, it should still precompile other ES6 features to ES5 if it intends to support older browsers**.
 
-2. Fork the package and publish a corrected version yourself. 
+2. Fork the package and publish a corrected version yourself.
 
 3. If the dependency is small enough, copy it to your `src/` folder and treat it as application code.
 
